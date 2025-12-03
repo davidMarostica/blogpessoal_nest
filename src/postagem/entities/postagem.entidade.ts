@@ -5,7 +5,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Tema } from '../../Tema/entities/tema.entity';
 
 @Entity({ name: 'tb_postagens' })
 export class Postagem {
@@ -30,7 +33,6 @@ export class Postagem {
   @UpdateDateColumn()
   dataAtualizacao: Date;
 
-  // Opcional: Campos adicionais
   @IsOptional()
   @MaxLength(50, { message: 'O autor deve ter no máximo 50 caracteres!' })
   @Column({ length: 50, default: 'Anônimo' })
@@ -38,4 +40,12 @@ export class Postagem {
 
   @Column({ default: true })
   ativa: boolean;
+
+  // RELAÇÃO COM TEMA (CORRIGIDA!)
+  @ManyToOne(() => Tema, (tema) => tema.postagem, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'tema_id' })
+  tema: Tema;
 }

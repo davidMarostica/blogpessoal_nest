@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, ILike, Repository } from 'typeorm';
-import { Postagem } from '../entities/postagem.Entidade';
+import { Postagem } from '../entities/postagem.entidade';
 
 @Injectable()
 export class PostagemService {
@@ -11,12 +11,16 @@ export class PostagemService {
   ) {}
 
   async findAll(): Promise<Postagem[]> {
-    return this.postagemRepository.find();
+    return this.postagemRepository.find({
+      relations: ['tema'],
+      order: { data: 'DESC' },
+    });
   }
 
   async findById(id: number): Promise<Postagem> {
     const postagem = await this.postagemRepository.findOne({
       where: { id },
+      relations: ['tema'], // CARREGA A RELAÇÃO COM TEMA
     });
 
     if (!postagem) {
@@ -27,14 +31,16 @@ export class PostagemService {
   }
 
   async create(postagem: Postagem): Promise<Postagem> {
+    // Se não tiver data, define a data atual
+    if (!postagem.data) {
+      postagem.data = new Date();
+    }
     return this.postagemRepository.save(postagem);
   }
 
   async update(id: number, postagem: Postagem): Promise<Postagem> {
     const existente = await this.findById(id); // garante que existe
-
     const atualizado = Object.assign(existente, postagem);
-
     return this.postagemRepository.save(atualizado);
   }
 
@@ -43,26 +49,14 @@ export class PostagemService {
       where: {
         titulo: ILike(`%${titulo}%`),
       },
+      relations: ['tema'], // CARREGA A RELAÇÃO COM TEMA
     });
   }
 
-  // MÉTODO DELETE SEGUINDO O TUTORIAL
   async delete(id: number): Promise<DeleteResult> {
     // Primeiro verifica se a postagem existe
     await this.findById(id); // Se não existir, lança NotFoundException
-
     // Se existir, executa o delete
     return await this.postagemRepository.delete(id);
-  }
-
-  // Alternativa: Método delete com verificação de affected rows
-  async deleteWithCheck(id: number): Promise<DeleteResult> {
-    const resultado = await this.postagemRepository.delete(id);
-
-    if (resultado.affected === 0) {
-      throw new NotFoundException(`Postagem com ID ${id} não encontrada`);
-    }
-
-    return resultado;
   }
 }

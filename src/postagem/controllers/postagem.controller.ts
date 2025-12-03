@@ -11,8 +11,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { PostagemService } from '../services/postagem.service';
-import { Postagem } from '../entities/postagem.Entidade';
-import { DeleteResult } from 'typeorm';
+import { Postagem } from '../entities/postagem.entidade';
 
 @Controller('/postagens')
 export class PostagemController {
@@ -51,19 +50,9 @@ export class PostagemController {
     return await this.postagemService.update(id, postagem);
   }
 
-  // MÉTODO DELETE SEGUINDO O TUTORIAL
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.postagemService.delete(id);
-  }
-
-  // Alternativa: Método delete que retorna DeleteResult
-  @Delete('/result/:id')
-  @HttpCode(HttpStatus.OK)
-  async deleteWithResult(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<DeleteResult> {
-    return await this.postagemService.delete(id);
   }
 }
