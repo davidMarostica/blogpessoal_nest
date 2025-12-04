@@ -1,12 +1,10 @@
-import { IsNotEmpty, IsOptional, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import {
   Column,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { Tema } from '../../Tema/entities/tema.entity';
 
@@ -15,37 +13,19 @@ export class Postagem {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @IsNotEmpty({ message: 'O título é obrigatório!' })
-  @MaxLength(100, { message: 'O título deve ter no máximo 100 caracteres!' })
-  @MinLength(3, { message: 'O título deve ter no mínimo 3 caracteres!' })
+  @IsNotEmpty()
   @Column({ length: 100, nullable: false })
   titulo: string;
 
-  @IsNotEmpty({ message: 'O texto é obrigatório!' })
-  @MaxLength(1000, { message: 'O texto deve ter no máximo 1000 caracteres!' })
-  @MinLength(10, { message: 'O texto deve ter no mínimo 10 caracteres!' })
+  @IsNotEmpty()
   @Column({ length: 1000, nullable: false })
   texto: string;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   data: Date;
 
-  @UpdateDateColumn()
-  dataAtualizacao: Date;
-
-  @IsOptional()
-  @MaxLength(50, { message: 'O autor deve ter no máximo 50 caracteres!' })
-  @Column({ length: 50, default: 'Anônimo' })
-  autor: string;
-
-  @Column({ default: true })
-  ativa: boolean;
-
-  // RELAÇÃO COM TEMA (CORRIGIDA!)
   @ManyToOne(() => Tema, (tema) => tema.postagem, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'tema_id' })
   tema: Tema;
 }

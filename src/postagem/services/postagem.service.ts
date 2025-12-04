@@ -49,7 +49,7 @@ export class PostagemService {
       where: {
         titulo: ILike(`%${titulo}%`),
       },
-      relations: ['tema'], // CARREGA A RELAÇÃO COM TEMA
+      relations: ['tema'],
     });
   }
 

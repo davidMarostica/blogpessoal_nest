@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { Tema } from '../entities/tema.entity';
 import { TemaService } from '../services/tema.service';
+import { DeleteResult } from 'typeorm';
 
 @Controller('/temas')
 export class TemaController {
@@ -37,19 +38,22 @@ export class TemaController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() Tema: Tema): Promise<Tema> {
-    return this.temaService.create(Tema);
+  create(@Body() tema: Tema): Promise<Tema> {
+    return this.temaService.create(tema);
   }
 
-  @Put()
+  @Put('/:id') // ID na URL
   @HttpCode(HttpStatus.OK)
-  update(@Body() Tema: Tema): Promise<Tema> {
-    return this.temaService.update(Tema);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() tema: Tema,
+  ): Promise<Tema> {
+    return this.temaService.update(id, tema);
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.temaService.delete(id);
   }
 }

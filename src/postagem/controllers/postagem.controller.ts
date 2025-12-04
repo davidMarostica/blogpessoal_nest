@@ -1,58 +1,59 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
   Body,
+  Controller,
+  Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
+  Post,
+  Put,
 } from '@nestjs/common';
-import { PostagemService } from '../services/postagem.service';
-import { Postagem } from '../entities/postagem.entidade';
+import { DeleteResult } from 'typeorm';
+import { TemaService } from '../../Tema/services/tema.service';
+import { Tema } from '../../Tema/entities/tema.entity';
 
-@Controller('/postagens')
-export class PostagemController {
-  constructor(private readonly postagemService: PostagemService) {}
+@Controller('/temas')
+export class TemaController {
+  constructor(private readonly temaService: TemaService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(): Promise<Postagem[]> {
-    return this.postagemService.findAll();
+  findAll(): Promise<Tema[]> {
+    return this.temaService.findAll();
   }
 
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
-    return this.postagemService.findById(id);
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Tema> {
+    return this.temaService.findById(id);
   }
 
-  @Get('/titulo/:titulo')
+  @Get('/descricao/:descricao')
   @HttpCode(HttpStatus.OK)
-  findByAllTitulo(@Param('titulo') titulo: string): Promise<Postagem[]> {
-    return this.postagemService.findAllByTitulo(titulo);
+  findByDescricao(@Param('descricao') descricao: string): Promise<Tema[]> {
+    return this.temaService.findByDescricao(descricao);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() postagem: Postagem): Promise<Postagem> {
-    return await this.postagemService.create(postagem);
+  create(@Body() tema: Tema): Promise<Tema> {
+    return this.temaService.create(tema);
   }
 
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() postagem: Postagem,
-  ): Promise<Postagem> {
-    return await this.postagemService.update(id, postagem);
+    @Body() tema: Tema,
+  ): Promise<Tema> {
+    return this.temaService.update(id, tema);
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.postagemService.delete(id);
+  delete(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
+    return this.temaService.delete(id);
   }
 }
