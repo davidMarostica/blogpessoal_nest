@@ -10,50 +10,50 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { PostagemService } from '../services/postagem.service';
 import { DeleteResult } from 'typeorm';
-import { TemaService } from '../../Tema/services/tema.service';
-import { Tema } from '../../Tema/entities/tema.entity';
+import { Postagem } from '../entities/postagem.entidade';
 
-@Controller('/temas')
-export class TemaController {
-  constructor(private readonly temaService: TemaService) {}
+@Controller('/postagens')
+export class PostagemController {
+  constructor(private readonly postagemService: PostagemService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(): Promise<Tema[]> {
-    return this.temaService.findAll();
+  findAll(): Promise<Postagem[]> {
+    return this.postagemService.findAll();
   }
 
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  findById(@Param('id', ParseIntPipe) id: number): Promise<Tema> {
-    return this.temaService.findById(id);
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
+    return this.postagemService.findById(id);
   }
 
-  @Get('/descricao/:descricao')
+  @Get('/titulo/:titulo')
   @HttpCode(HttpStatus.OK)
-  findByDescricao(@Param('descricao') descricao: string): Promise<Tema[]> {
-    return this.temaService.findByDescricao(descricao);
+  findAllByTitulo(@Param('titulo') titulo: string): Promise<Postagem[]> {
+    return this.postagemService.findAllByTitulo(titulo);
   }
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  create(@Body() tema: Tema): Promise<Tema> {
-    return this.temaService.create(tema);
+  @HttpCode(HttpStatus.CREATED) //201
+  create(@Body() postagem: Postagem): Promise<Postagem> {
+    return this.postagemService.create(postagem);
   }
 
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() tema: Tema,
-  ): Promise<Tema> {
-    return this.temaService.update(id, tema);
+    @Body() postagem: Postagem,
+  ): Promise<Postagem> {
+    return this.postagemService.update(id, postagem);
   }
 
   @Delete('/:id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT) // 204, ele fala que foi excluido com sucesso, porem nao
   delete(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
-    return this.temaService.delete(id);
+    return this.postagemService.delete(id);
   }
 }
