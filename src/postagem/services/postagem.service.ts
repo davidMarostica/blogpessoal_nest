@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, ILike, Repository } from 'typeorm';
-import { Postagem } from '../entities/postagem.entidade';
+import { Postagem } from '../entities/postagem.entity';
 
 @Injectable()
 export class PostagemService {
@@ -12,7 +12,10 @@ export class PostagemService {
 
   async findAll(): Promise<Postagem[]> {
     return this.postagemRepository.find({
-      relations: ['tema'],
+      relations: {
+        tema: true,
+        usuario: true,
+      },
       order: { data: 'DESC' },
     });
   }
@@ -20,7 +23,10 @@ export class PostagemService {
   async findById(id: number): Promise<Postagem> {
     const postagem = await this.postagemRepository.findOne({
       where: { id },
-      relations: ['tema'], // CARREGA A RELAÇÃO COM TEMA
+      relations: {
+        tema: true,
+        usuario: true,
+      },
     });
 
     if (!postagem) {
@@ -31,7 +37,6 @@ export class PostagemService {
   }
 
   async create(postagem: Postagem): Promise<Postagem> {
-    // Se não tiver data, define a data atual
     if (!postagem.data) {
       postagem.data = new Date();
     }
@@ -40,7 +45,7 @@ export class PostagemService {
 
   async update(id: number, postagem: Postagem): Promise<Postagem> {
     const existente = await this.findById(id); // garante que existe
-    const atualizado = Object.assign(existente, postagem);
+    const atualizado = this.postagemRepository.merge(existente, postagem);
     return this.postagemRepository.save(atualizado);
   }
 
@@ -49,14 +54,16 @@ export class PostagemService {
       where: {
         titulo: ILike(`%${titulo}%`),
       },
-      relations: ['tema'],
+      relations: {
+        tema: true,
+        usuario: true,
+      },
+      order: { data: 'DESC' },
     });
   }
 
   async delete(id: number): Promise<DeleteResult> {
-    // Primeiro verifica se a postagem existe
-    await this.findById(id); // Se não existir, lança NotFoundException
-    // Se existir, executa o delete
+    await this.findById(id);
     return await this.postagemRepository.delete(id);
   }
 }

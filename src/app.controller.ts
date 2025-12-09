@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { PostagemService } from './postagem/services/postagem.service';
-import { Postagem } from './postagem/entities/postagem.entidade';
+import { Postagem } from './postagem/entities/postagem.entity';
 
 @Controller('/postagens')
 export class PostagemController {
