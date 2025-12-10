@@ -9,16 +9,18 @@ import {
   Post,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { PostagemService } from '../services/postagem.service';
 import { Postagem } from '../entities/postagem.entity';
 import { DeleteResult } from 'typeorm';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/postagens')
 export class PostagemController {
   constructor(private readonly postagemService: PostagemService) {}
 
-  // Agora funciona com GET /postagens
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<Postagem[]> {
@@ -43,7 +45,6 @@ export class PostagemController {
     return this.postagemService.create(postagem);
   }
 
-  // Agora funciona com PUT /postagens/:id
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
   async update(
