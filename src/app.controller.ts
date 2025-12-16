@@ -1,14 +1,13 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
-import { PostagemService } from './postagem/services/postagem.service';
-import { Postagem } from './postagem/entities/postagem.entity';
+import { Controller, Get, Res } from '@nestjs/common';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
-@Controller('/postagens')
-export class PostagemController {
-  constructor(private readonly postagemService: PostagemService) {}
+@Controller()
+export class AppController {
+  constructor() {}
 
+  @ApiExcludeEndpoint()
   @Get()
-  @HttpCode(HttpStatus.OK)
-  findAll(): Promise<Postagem[]> {
-    return this.postagemService.findAll();
+  async redirect(@Res() resposta: any) {
+    return resposta.redirect('/swagger');
   }
 }

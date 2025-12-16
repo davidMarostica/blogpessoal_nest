@@ -15,9 +15,12 @@ import { Tema } from '../entities/tema.entity';
 import { TemaService } from '../services/tema.service';
 import { DeleteResult } from 'typeorm';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtAuthGuard)
 @Controller('/temas')
+@ApiTags('Tema')
+@ApiBearerAuth()
 export class TemaController {
   constructor(private readonly temaService: TemaService) {}
 
@@ -45,7 +48,7 @@ export class TemaController {
     return this.temaService.create(tema);
   }
 
-  @Put('/:id') // ID na URL
+  @Put('/:id')
   @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: number,
