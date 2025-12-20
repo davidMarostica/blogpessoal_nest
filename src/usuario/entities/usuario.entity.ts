@@ -27,5 +27,5 @@ export class Usuario {
   foto: string;
 
   @OneToMany(() => Postagem, (postagem) => postagem.usuario)
-  postagem: Postagem[];
+  postagens: Postagem[];
 }

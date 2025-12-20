@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from '../entities/usuario.entity';
@@ -59,5 +64,12 @@ export class UsuarioService {
 
     usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha);
     return await this.usuarioRepository.save(usuario);
+  }
+  async delete(id: number): Promise<void> {
+    const usuario = await this.usuarioRepository.findOneBy({ id });
+    if (!usuario) {
+      throw new NotFoundException(`Usuário com id ${id} não encontrado`);
+    }
+    await this.usuarioRepository.delete(id);
   }
 }
