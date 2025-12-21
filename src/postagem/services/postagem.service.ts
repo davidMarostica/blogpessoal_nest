@@ -44,7 +44,7 @@ export class PostagemService {
   }
 
   async update(id: number, postagem: Postagem): Promise<Postagem> {
-    const existente = await this.findById(id); // garante que existe
+    const existente = await this.findById(id);
     const atualizado = this.postagemRepository.merge(existente, postagem);
     return this.postagemRepository.save(atualizado);
   }

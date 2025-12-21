@@ -7,7 +7,7 @@ import { AuthController } from './controllers/auth.controller';
 import { Bcrypt } from './bcrypt/bcrypt';
 import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategy/local.strategy';
-import { JwtStrategy } from './guard/jwt.strategy';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [

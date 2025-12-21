@@ -6,6 +6,7 @@ import { Tema } from './Tema/entities/tema.entity';
 import { TemaModule } from './Tema/tema.module';
 import { Usuario } from './usuario/entities/usuario.entity';
 import { UsuarioModule } from './usuario/usuario.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -21,6 +22,7 @@ import { UsuarioModule } from './usuario/usuario.module';
     PostagemModule,
     TemaModule,
     UsuarioModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
