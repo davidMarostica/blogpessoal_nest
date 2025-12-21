@@ -37,7 +37,7 @@ export class Postagem {
   tema: Tema;
 
   @ApiProperty({ type: () => Usuario })
-  @ManyToOne(() => Usuario, (usuario) => usuario.postagens, {
+  @ManyToOne(() => Usuario, (usuario) => usuario.postagem, {
     onDelete: 'CASCADE',
   })
   usuario: Usuario;
